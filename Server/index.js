@@ -4,7 +4,7 @@ const express = require("express")
 const mongoose = require('mongoose')
 
 const cors = require("cors")
-const module = require('./Models/user')
+const usermodule = require('./Models/User')
 
 
 const app = express()
@@ -13,11 +13,11 @@ app.use (express.json())
 
 app.use(cors())
 
-mongoose.connect("mongodb://localhost://127.0.0.1:27017/loginpage");
+mongoose.connect("mongodb://127.0.0.1/loginpage");
 app.post('/user',(req,res)=>{
-    module.create(req.body)
+    usermodule.create(req.body)
     .then(users=>res.json(users))
-    .er
+    .catch(err=>res.json(err))
 
 })
 app.listen(3001, () => {

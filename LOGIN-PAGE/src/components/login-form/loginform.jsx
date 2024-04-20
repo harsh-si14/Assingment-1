@@ -6,17 +6,16 @@ import { FaLock, FaUser } from 'react-icons/fa';
 const Loginform = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post('https://localhost:3001/user', { username, password });
-    
-      console.log(response.data);
-    } catch (error) {
-      setError(error.response.data.message);
-    }
+    axios.post('http://localhost:3001/user', { username, password })
+      .then(result => {
+        alert('You are logged in!'); // Show pop-up message upon successful login
+        setUsername(''); // Clear username field
+        setPassword(''); // Clear password field
+      })
+      .catch(err => console.log(err));
   };
 
   return (
@@ -51,7 +50,6 @@ const Loginform = () => {
           <a href="#">Forgot Password?</a>
         </div>
         <button type="submit">Login</button>
-        {error && <div className="error-message">{error}</div>}
         <div className="register-link">
           <p>
             Don't have an account? <a href="#">Register Now</a>
