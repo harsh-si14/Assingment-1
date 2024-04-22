@@ -3,12 +3,12 @@ import axios from 'axios';
 import './Loginform.css';
 import { FaEnvelope, FaLock, FaUser } from 'react-icons/fa';
 
-
 const Loginform = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [action,setAction] = useState('');
+  const [action, setAction] = useState('');
   const [email, setEmail] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,9 +20,10 @@ const Loginform = () => {
       })
       .catch(err => console.log(err));
   };
+
   const handleregister = async (e) => {
     e.preventDefault();
-    axios.post('http://localhost:3002/employee', { username,email, password })
+    axios.post('http://localhost:3002/employee', { username, email, password })
       .then(result => {
         alert('You are registered !'); 
         setUsername('');
@@ -40,19 +41,45 @@ const Loginform = () => {
     setAction('');
   };
 
+  const handlePasswordChange = (e) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    
+    // Password validation rules
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(newPassword);
+    const hasLowerCase = /[a-z]/.test(newPassword);
+    const hasNumbers = /[0-9]/.test(newPassword);
+    const hasSpecialChars = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+/.test(newPassword);
+    
+    // Check if password meets all rules
+    if (
+      newPassword.length < minLength ||
+      !hasUpperCase ||
+      !hasLowerCase ||
+      !hasNumbers ||
+      !hasSpecialChars
+    ) {
+      setPasswordError("Password must be 8+ characters with uppercase, lowercase, number, and special character.");
+    } else {
+      setPasswordError('');
+    }
+  };
+
   return (
     <div className={`wrapper ${action}`}>
       <div className="form-box login">
         <form onSubmit={handleSubmit}>
           <h1>LOGIN</h1>
           <div className="input-box">
-            <input
-              type="text"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
+          <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <FaEnvelope className="icon" />
             <FaUser className="icon" />
           </div>
           <div className="input-box">
@@ -60,18 +87,12 @@ const Loginform = () => {
               type="password"
               placeholder="Password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handlePasswordChange}
               required
             />
             <FaLock className="icon" />
           </div>
-          <div className="remeber-forget">
-            <label>
-              <input type="checkbox" />
-              Remember me
-            </label>
-            <a href="#">Forgot Password?</a>
-          </div>
+          {passwordError && <p className="password-error">{passwordError}</p>}
           <button type="submit">Login</button>
           <div className="register-link">
             <p>
@@ -81,7 +102,6 @@ const Loginform = () => {
         </form>
       </div>
       <div className='form-box registration'>
-      
         <form onSubmit={handleregister}>
           <h1>REGISTER</h1>
           <div className="input-box">
@@ -109,17 +129,12 @@ const Loginform = () => {
               type="password"
               placeholder="Password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handlePasswordChange}
               required
             />
             <FaLock className="icon" />
           </div>
-          <div className="remeber-forget">
-            <label>
-              <input type="checkbox" />
-               I agree to the terms & conditions
-            </label>
-          </div>
+          {passwordError && <p className="password-error">{passwordError}</p>}
           <button type="submit">Register</button>
           <div className="register-link">
             <p>
